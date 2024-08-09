@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Person Data Generator</title>
+    <style>
+        .header-container {
+            background-color: #ff5c02; /* Orange background */
+            padding: 20px; /* Padding around the text */
+            border-radius: 10px; /* Soft frame */
+            text-align: center; /* Center the text */
+        }
+
+        .header-text {
+            color: white; /* White text color */
+            font-family: "Arial", sans-serif;
+            font-size: 24px; /* Adjust the font size as needed */
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #000000;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #ff5c02;
+        }
+        button {
+            background-color: #ff5c02;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #e64a00;
+        }
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        body{
+            background: url("photo.jpg") no-repeat;
+            background-size: cover;
+        }
+        .error-message {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 10px; /* Add space below form */
+        }
+    </style>
+</head>
+<body>
+<div class="header-container">
+    <h1 class="header-text">Person Data Generator</h1>
+</div>
+<form action="generate" method="post">
+    <fieldset>
+        <legend><strong>Generation Settings</strong></legend>
+
+        <div>
+            <label for="count"><strong>Number of Entries:</strong></label>
+            <input type="number" id="count" name="count" min="1" required>
+            <div class="error-message" id="countError"></div>
+        </div>
+
+        <div>
+            <label for="language"><strong>Language:</strong></label>
+            <select id="language" name="language" required>
+                <option th:each="locale : ${languages}"
+                        th:value="${locale.toLanguageTag()}"
+                        th:text="${locale.displayLanguage}">
+                </option>
+            </select>
+        </div>
+
+        <fieldset>
+            <legend><strong>Optional Fields</strong></legend>
+            <div>
+                <input type="checkbox" id="includeCountryOrigin" name="includeCountryOrigin" value="true">
+                <label for="includeCountryOrigin">Country of Origin</label>
+            </div>
+            <div>
+                <input type="checkbox" id="includeJobTitle" name="includeJobTitle" value="true">
+                <label for="includeJobTitle">Job Title</label>
+            </div>
+            <div>
+                <input type="checkbox" id="includePhoneNumber" name="includePhoneNumber" value="true">
+                <label for="includePhoneNumber">Phone Number</label>
+            </div>
+            <div>
+                <input type="checkbox" id="includeAddress" name="includeAddress" value="true">
+                <label for="includeAddress">Address</label>
+            </div>
+            <div>
+                <input type="checkbox" id="includeUniversity" name="includeUniversity" value="true">
+                <label for="includeUniversity">University</label>
+            </div>
+            <div>
+                <input type="checkbox" id="includeJobExperience" name="includeJobExperience" value="true">
+                <label for="includeJobExperience">Job Experience</label>
+            </div>
+            <div>
+                <input type="checkbox" id="includeHobbies" name="includeHobbies" value="true">
+                <label for="includeHobbies">Hobbies</label>
+            </div>
+            <div>
+                <input type="checkbox" id="includeSocialSecurityNumber" name="includeSocialSecurityNumber" value="true">
+                <label for="includeSocialSecurityNumber">Social Security Number</label>
+            </div>
+            <div>
+                <input type="checkbox" id="includeWebsite" name="includeWebsite" value="true">
+                <label for="includeWebsite">Website</label>
+            </div>
+
+        </fieldset>
+    </fieldset>
+
+    <button type="submit">Generate Data</button>
+</form>
+<div class="error-message" th:if="${errorMessage != null}" th:text="${errorMessage}"></div>
+
+
+<div th:if="${persons}">
+    <h2>Generated Data</h2>
+    <table>
+        <thead>
+        <tr>
+            <th th:each="header : ${tableHeaders}" th:text="${header}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="person : ${persons}">
+            <td th:text="${person.getFirstName()}"></td>
+            <td th:text="${person.getLastName()}"></td>
+            <td th:text="${person.getDateOfBirth()}"></td>
+            <td th:if="${person.getAddress() != null}" th:text="${person.getAddress()}"></td>
+            <td th:if="${person.getUniversity() != null}" th:text="${person.getUniversity()}"></td>
+            <td th:if="${person.getCountryOrigin() != null}" th:text="${person.getCountryOrigin()}"></td>
+            <td th:if="${person.getJobTitle() != null}" th:text="${person.getJobTitle()}"></td>
+            <td th:if="${person.getPhoneNumber() != null}" th:text="${person.getPhoneNumber()}"></td>
+            <td th:if="${person.getJobExperience() != null}" th:text="${person.getJobExperience()}"></td>
+            <td th:if="${person.getHobbies() != null}" th:text="${person.getHobbies()}"></td>
+            <td th:if="${person.getSocialSecurityNumber() != null}" th:text="${person.getSocialSecurityNumber()}"></td>
+            <td th:if="${person.getWebsite() != null}" th:text="${person.getWebsite()}"></td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
